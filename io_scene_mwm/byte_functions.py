@@ -2,16 +2,22 @@
 import struct
 
 
+def read_varint(file):
+    value = 0
+    shift = 0
+    while True:
+        byte = file.read(1)[0]
+        value |= (byte & 0x7F) << shift
+        shift += 7
+        if (byte & 0x80) == 0:
+            break
+    return value
+
+
 def read_string(file):
-    byte = file.read(1)
-    nChars = int.from_bytes(byte, "little")
-    chars = []
-
-    for i in range(nChars):
-        byte = file.read(1)
-        chars.append(chr(int.from_bytes(byte, "little")))
-
-    return "".join(chars)
+    nChars = read_varint(file)
+    string = file.read(nChars).decode('utf-8')
+    return string
 
 
 def read_hfloat(file):
@@ -55,13 +61,13 @@ def f16_to_f32(float16):
 
 def read_long(file):
     s = file.read(4)
-    long = struct.unpack("<L", s)[0]
+    long = struct.unpack("<l", s)[0]
     return long
 
 
 def read_float(file):
     bytes = file.read(4)
-    value = struct.unpack('f', bytes)[0]
+    value = struct.unpack('<f', bytes)[0]
     return value
 
 

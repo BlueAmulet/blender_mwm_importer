@@ -36,7 +36,8 @@ class BoundingSphere(object):
 
 class MeshPart(object):
 
-    def __init__(self, faces, material):
+    def __init__(self, vertex_map, faces, material):
+        self.vertex_map = vertex_map
         self.faces = faces
         self.material = material
 
@@ -50,3 +51,11 @@ class Material(object):
         self.diffuse_color = diffuse_color
         self.specular_color = specular_color
         self.technique = technique
+
+
+class Bone(object):
+
+    def __init__(self, name, parent, transform):
+        self.name = name
+        self.parent = parent
+        self.transform = transform
